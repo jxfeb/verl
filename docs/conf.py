@@ -51,6 +51,14 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
 ]
+# Autosummary/autodoc defaults
+autosummary_generate = True
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "show-inheritance": True,
+}
+autodoc_typehints = "description"
 # Use Google style docstrings instead of NumPy docstrings.
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
