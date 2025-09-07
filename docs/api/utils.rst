@@ -74,3 +74,12 @@ Debug Utilities
 .. automodule:: verl.utils.profiler
    :members: log_gpu_memory_usage, GPUMemoryLogger
 
+Examples
+-----------------
+
+.. code-block:: python
+
+   from verl.utils.metric import reduce_metrics
+   metrics = {"a": [1.0, 2.0], "b": [3.0, 4.0]}
+   reduced = reduce_metrics(metrics)
+

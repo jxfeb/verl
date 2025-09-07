@@ -29,3 +29,24 @@ Core APIs
 .. autoclass:: verl.workers.reward_manager.NaiveRewardManager
 
 .. autoclass:: verl.workers.reward_manager.DAPORewardManager
+Examples
+-----------------
+
+- Minimal end-to-end PPO training driver snippet (single node Ray):
+
+.. code-block:: python
+
+   from omegaconf import OmegaConf
+   from verl.trainer.ppo.ray_trainer import RayPPOTrainer, ResourcePoolManager
+   from verl.trainer.ppo.utils import Role, WorkerType
+   from verl.workers.fsdp_workers import ActorRolloutRefWorker, CriticWorker
+
+   cfg = OmegaConf.load("examples/ppo_trainer/config.yaml")
+   rpm = ResourcePoolManager(
+       resource_pool_spec={"default": [4]},
+       mapping={Role.ActorRollout: "default", Role.Critic: "default"},
+   )
+   role_map = {Role.ActorRollout: WorkerType.FSDP, Role.Critic: WorkerType.FSDP}
+   trainer = RayPPOTrainer(cfg, tokenizer=None, role_worker_mapping=role_map, resource_pool_manager=rpm)
+   trainer.init_workers()
+   trainer.fit()

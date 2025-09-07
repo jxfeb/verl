@@ -59,3 +59,34 @@ Core APIs
 
 .. autoclass::  verl.DataProto
    :members: to, select, union, make_iterator, concat
+
+Examples
+-----------------
+
+- Create from tensors and numpy arrays, then iterate mini-batches:
+
+.. code-block:: python
+
+   import torch, numpy as np
+   from tensordict import TensorDict
+   from verl import DataProto
+
+   batch = TensorDict({
+       "input_ids": torch.randint(0, 100, (8, 16)),
+       "attention_mask": torch.ones(8, 16, dtype=torch.long),
+   }, batch_size=(8,))
+   non_tensor = {"uid": np.array([f"sample-{i}" for i in range(8)], dtype=object)}
+   dp = DataProto(batch=batch, non_tensor_batch=non_tensor, meta_info={"epoch": 0})
+
+   it = dp.make_iterator(mini_batch_size=4, epochs=1)
+   for mb in it:
+       # mb is a DataProto
+       pass
+
+- Pad to divisor and unpad:
+
+.. code-block:: python
+
+   from verl.protocol import pad_dataproto_to_divisor, unpad_dataproto
+   padded, pad = pad_dataproto_to_divisor(dp, size_divisor=6)
+   restored = unpad_dataproto(padded, pad)

@@ -28,3 +28,18 @@ Core APIs
    :members: __init__
 
 .. autofunction:: verl.single_controller.ray.create_colocated_worker_cls
+
+Examples
+-----------------
+
+.. code-block:: python
+
+   from verl.single_controller.ray import RayWorkerGroup
+   from verl.single_controller.ray.base import create_colocated_worker_cls
+   from verl.workers.fsdp_workers import ActorRolloutRefWorker
+
+   worker_cls = create_colocated_worker_cls({
+       "actor_rollout": (ActorRolloutRefWorker, {"config": ..., "role": "actor_rollout"})
+   })
+   wg = RayWorkerGroup(resource_pool=None, ray_cls_with_init=worker_cls, device_name="cuda")
+   wg.spawn(prefix_set={"actor_rollout"})
